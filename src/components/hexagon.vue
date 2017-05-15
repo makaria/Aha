@@ -1,19 +1,14 @@
 <template>
-  <g @mouseenter="enter"
-     @mouseout="out"
-     class="title"
-     :transform="transformG"
-     @contextmenu.stop.prevent
-     @dblclick.stop.prevent="unselect"
-     @click.left.prevent="select">
-    <ellipse :rx="radius"
-             :ry="radius*0.9"
-             :class="status">
+  <g @mouseenter="enter" @mouseout="out" class="title" :transform="transformG" @contextmenu.stop.prevent @dblclick.stop.prevent="unselect" @click.left.prevent="select">
+    <ellipse :rx="radius" :ry="radius*0.9" :class="status">
     </ellipse>
     <text v-show="showCoord" y="0.4em">
       <tspan class="q" v-text="x"></tspan>
       <tspan>,</tspan>
       <tspan class="r" v-text="y"></tspan>
+    </text>
+    <text v-show="caught" y="0.4em">
+      <tspan>Cat</tspan>
     </text>
   </g>
 </template>
@@ -87,7 +82,6 @@
 </script>
 
 <style scoped>
-
 text {
   text-anchor: middle;
   cursor: pointer;
@@ -104,7 +98,9 @@ ellipse {
 }
 
 .caught {
-  fill: black;
+  fill: transparent;
+  stroke-width: 3;
+  stroke: black;
 }
 
 .path {
@@ -118,5 +114,4 @@ ellipse {
 .finished {
   fill: red;
 }
-
 </style>
