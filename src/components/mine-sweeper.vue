@@ -43,17 +43,23 @@ export default m =
     counting: false
     col: 30
     row: 16
-    colspan: 4
-    finished: false
+    # colspan: 4
+    # finished: false
     exploded: false
     exposed: 0
     flaged: 0
     cells: {}
-    exposes: {}
-    flags: {}
+    # exposes: {}
+    # flags: {}
     neighbor: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]]
 
   computed:
+    colspan: ->
+      if @col >= 10
+        4
+      else
+        (@col - 2) * 0.5
+
     img: ->
       if @exploded
         'sad.gif'
@@ -94,6 +100,7 @@ export default m =
     init: ->
       # console.log 'init'
       @exploded = false
+      @flaged = 0
       @exposed = 0
       @counting = false
       @counter = '∞'
@@ -103,8 +110,7 @@ export default m =
       @updateNeighbor()
 
     count: ->
-      if @exploded then return
-      @counting = true
+      if @exploded || !@counting then return
       @counter += 1
       setTimeout =>
         @count()
@@ -250,6 +256,7 @@ export default m =
     mouse: (e, i, j) ->
       # console.log i, j
       if @exposed == 0 && !@counting
+        @counting = true
         @counter = 0
         @count()
       key = @key i, j
