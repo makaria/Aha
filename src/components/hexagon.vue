@@ -1,5 +1,5 @@
 <template>
-  <g @mouseenter="enter" @mouseout="out" class="title" :transform="transformG" @contextmenu.stop.prevent @dblclick.stop.prevent="unselect" @click.left.prevent="select">
+  <g @mouseenter="enter" @mouseout="out" class="title" :transform="transformG" @contextmenu.prevent @mousedown.prevent="mousedown">
     <ellipse :rx="radius" :ry="radius*0.9" :class="status">
     </ellipse>
     <text v-show="showCoord" y="0.4em">
@@ -60,6 +60,12 @@
     methods:
       hello: ->
         console.log('hello')
+
+      mousedown: (e) ->
+        if e.button == 0
+          @select()
+        else if e.button == 2
+          @unselect()
 
       select: ->
         if @selected || @caught then return

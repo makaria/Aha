@@ -4,7 +4,7 @@
     <div class="action">
       <button @click="toggleSpanning" v-text="spanningText" :class="spanClass"></button>
       <button @click="toggleSteiner" v-text="steinerText" :class="spanClass"></button>
-      <button @click="steiner" v-text="'Steiner X' + steinered" :class="spanClass"></button>
+      <button @click="steiner" v-text="'Steiner X' + steinered" :class="steinerClass"></button>
       <button @click="toggleUpdating" v-text="updateText" :class="buttonClass"></button>
       <button @click="clear" :class="buttonClass">Clear</button>
     </div>
@@ -17,7 +17,7 @@
           </text>
           <text v-if="pmst" class="ptext" x="5" y="40" v-text="'Prime Tree: ' + pmst.length">
           </text>
-          <text v-if="flength" class="ftext" x="5" y="60" v-text="'Steiner Tree: ' + flength">
+          <text v-if="flength" class="ftext" x="5" :y="steinerY" v-text="'Steiner Tree: ' + flength">
           </text>
         </g>
         <!-- lines -->
@@ -46,7 +46,7 @@
             <!--<circle class="ring" :cx="point.x" :cy="point.y" :r="radius*0.3">                                                                                                                            </circle>-->
             <circle class="point" :cx="point.x" :cy="point.y" :r="3">
             </circle>
-            <text class="fermat" :x="point.x" :y="point.y" v-text="point.index">
+            <text class="fermat" :x="point.x + 3" :y="point.y + 3" v-text="point.index">
             </text>
           </g>
         </g>
@@ -57,7 +57,7 @@
             </circle>
             <circle class="point" :cx="point.x" :cy="point.y" :r="5">
             </circle>
-            <text class="text" :x="point.x" :y="point.y" v-text="point.index">
+            <text class="text" :x="point.x + 5" :y="point.y + 5" v-text="point.index">
             </text>
           </g>
         </g>
@@ -68,7 +68,7 @@
             </circle>
             <circle class="point" :cx="current.x" :cy="current.y" :r="5">
             </circle>
-            <text class="text" :x="current.x" :y="current.y" v-text="index">
+            <text class="text" :x="current.x + 5" :y="current.y + 5" v-text="index">
             </text>
           </g>
         </g>
@@ -153,11 +153,25 @@ export default m =
       else
         ''
 
+    steinerClass: ->
+      if @moving || @updating || !@steinering
+        'disabled'
+      else
+        ''
+
     pointClass: ->
       if @updating || @moving
         ''
       else
         'movable'
+
+    steinerY: ->
+      n = 1
+      if @pmst
+        n += 1
+      if @kmst
+        n += 1
+      n * 20
 
   created: ->
     window.onresize = @resize
@@ -182,7 +196,9 @@ export default m =
       @dynamic_border = []
       @dynamic_vertex = []
       #重新生成，删除因为到边界外点击按钮生成的临时线段。
+      @need_updated = true
       @span()
+      @steiner()
       if !@current?
         @current =
           x: @width * 0.5
@@ -441,8 +457,8 @@ export default m =
             0: points[next.previous]
             1: points[next.couple.index]
             distance: next.distance
-        else
-          console.info next, start, vertex
+        # else
+        #   console.info next, start, vertex
         k++
         #fermat, push
         #fermat_vertex[next.previous].couple.push points[next.couple.index]
@@ -868,7 +884,7 @@ rect {
 
 .ring {
   fill: transparent;
-  stroke: black;
+  stroke: transparent;
   stroke-opacity: 0.3;
   stroke-width: 3;
 }

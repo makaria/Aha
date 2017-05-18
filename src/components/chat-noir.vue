@@ -2,22 +2,17 @@
   <div id="chatnoir">
     <h2 v-text="status"></h2>
     <!--
-    <div class="action">
-      <button @click="init">Play</button>
-      <button @click="toggle_path" v-text="pathText">Show Path</button>
-      <button @click="toggle_coord" v-text="coordText">Show Coord</button>
-      <button @click="toggle_insight" v-text="insightText">Show Insight</button>
-    </div>
-    -->
+            <div class="action">
+              <button @click="init">Play</button>
+              <button @click="toggle_path" v-text="pathText">Show Path</button>
+              <button @click="toggle_coord" v-text="coordText">Show Coord</button>
+              <button @click="toggle_insight" v-text="insightText">Show Insight</button>
+            </div>
+            -->
     <div class="board">
-      <svg :width="width" :height="height">
+      <svg :width="width" :height="height" @contextmenu.prevent>
         <g :transform="transform">
-          <aha-hexagon v-for="(cell, key) in pixels"
-                      :key="key"
-                      :cell="cell"
-                      :showCoord="showCoord"
-                      :radius="radius"
-                      :interval="interval">
+          <aha-hexagon v-for="(cell, key) in pixels" :key="key" :cell="cell" :showCoord="showCoord" :radius="radius" :interval="interval">
           </aha-hexagon>
         </g>
       </svg>
@@ -199,7 +194,7 @@ export default m =
 
     pick: (x, y) ->
       if @finish then return
-      console.log x, y
+      # console.log x, y
       key = @hex_key x, y
       cell = @point x, y
       @selected[key] = cell
@@ -210,7 +205,7 @@ export default m =
     unpick: (x, y) ->
       if @finish
         @finish = null
-      console.log x, y
+      # console.log x, y
       key = @hex_key x, y
       cell = @point x, y
       @selected[key] = null
@@ -218,7 +213,7 @@ export default m =
       @revert += 1
       @update_path()
       @is_finish()
-      @next()
+      # @next()
 
 
     next_path: (x, y, pathy) ->
@@ -367,7 +362,16 @@ div.board {
   flex: auto;
   justify-content: center;
   margin: 0 0 0 2rem;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  -webkit-user-select: none;
 }
+
+
+
+
 
 /*
 div.action > div {

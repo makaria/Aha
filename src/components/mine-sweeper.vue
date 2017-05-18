@@ -92,7 +92,7 @@ export default m =
 
   methods:
     init: ->
-      console.log 'init'
+      # console.log 'init'
       @exploded = false
       @exposed = 0
       @counting = false
@@ -233,7 +233,7 @@ export default m =
       mines: mines
 
     moveMines: (cell) ->
-      console.log 'move mines'
+      # console.log 'move mines'
       array = []
       array.push cell
       array = array.concat cell.neighbor
@@ -248,7 +248,7 @@ export default m =
       @updateNeighbor()
 
     mouse: (e, i, j) ->
-      console.log i, j
+      # console.log i, j
       if @exposed == 0 && !@counting
         @counter = 0
         @count()
@@ -262,7 +262,7 @@ export default m =
 
 
     sweep: (cell) ->
-      console.log 'sweep'
+      # console.log 'sweep'
       if cell.flaged == 'flaged' then return
       if @exposed == 0 && (cell.mined || cell.mines > 0)
           @moveMines cell
@@ -274,7 +274,7 @@ export default m =
         @expose cell
 
     flag: (cell) ->
-      console.log 'flag'
+      # console.log 'flag'
       flags = ['flaged', 'unsettled', false]
       index = flags.indexOf cell.flaged
       if index == flags.length - 1
@@ -296,7 +296,7 @@ export default m =
           @expose nb
 
     explode: (cell) ->
-      console.log 'explode'
+      # console.log 'explode'
       cell.exploded = true
       @exploded = true
 
