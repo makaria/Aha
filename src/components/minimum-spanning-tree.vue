@@ -242,6 +242,8 @@ export default m =
       @current = @point e.clientX, e.clientY
       @need_updated = true
       @span()
+      if !@spanning
+        @steiner()
 
     drop: (e) ->
       if !@updating && !@moving then return
@@ -298,6 +300,9 @@ export default m =
         Math.acos((ab * ab + ac * ac - bc * bc) / (2 * ab * ac))
       else
         0
+
+    # equal_angle: (angle) ->
+    #   Math.abs(angle - @fermat_angle) < @deviation
 
 
     #只在新增点时增量计算vertex和border，但是似乎不比在span时全部计算快，反而复杂了
@@ -395,6 +400,8 @@ export default m =
       @steinered = 0
       @steiner()
 
+
+    ##prime start
     next: (start, vertex) ->
       distances = []
       for i in start
@@ -414,49 +421,6 @@ export default m =
             start.indexOf(v.couple.index) == -1
       vertex
 
-    border2vertex: (tree, points) ->
-      vertex = []
-      for border in tree #or @ptree, @tree
-        index_a = border[0].index
-        index_b = border[1].index
-        vertex[index_a] = vertex[index_a] ||
-          couple: []
-          point: points[index_a]
-        vertex[index_b] = vertex[index_b] ||
-          couple: []
-          point: points[index_b]
-        vertex[index_a].couple.push
-          point: points[index_b]
-          distance: border.distance
-        vertex[index_b].couple.push
-          point: points[index_a]
-          distance: border.distance
-      vertex
-
-    vertex2border: (vertexs) ->
-      border = []
-      for vertex in vertexs
-        vertex.couple.forEach (c) ->
-          if border.length > 0
-            index = border.findIndex (b) ->
-              b.distance == c.distance && (c.point.index == b[0].index && vertex.point.index == b[1].index) || (c.point.index == b[1].index && vertex.point.index == b[0].index)
-            if index == -1
-              border.push
-                0: vertex.point
-                1: c.point
-                distance: c.distance
-          else
-            border.push
-              0: vertex.point
-              1: c.point
-              distance: c.distance
-      border
-
-    vertex2point: (vertexs) ->
-      points = []
-      for vertex in vertexs
-        points.push vertex.point
-      points
 
     #100左右就很慢了, trim和next的问题？
     prim: (vertex, points) ->
@@ -469,13 +433,16 @@ export default m =
       #vertex = JSON.parse JSON.stringify @vertex
       while k < points.length - 1
         next = @next start, vertex
-        start.push next.couple.index
-        vertex = @trim vertex, start
-        length += next.distance
-        tree.push
-          0: points[next.previous]
-          1: points[next.couple.index]
-          distance: next.distance
+        if next
+          start.push next.couple.index
+          vertex = @trim vertex, start
+          length += next.distance
+          tree.push
+            0: points[next.previous]
+            1: points[next.couple.index]
+            distance: next.distance
+        else
+          console.info next, start, vertex
         k++
         #fermat, push
         #fermat_vertex[next.previous].couple.push points[next.couple.index]
@@ -492,6 +459,8 @@ export default m =
       #fermat
       #@fermat_vertex = fermat_vertex
 
+
+    ##kruskal start
     border2set: (border, vertex_set, border_set, index)->
       index_a = border[0].index
       index_b = border[1].index
@@ -587,8 +556,53 @@ export default m =
       vertex: vertex_set
       length: length
 
-    # equal_angle: (angle) ->
-    #   Math.abs(angle - @fermat_angle) < @deviation
+
+    ##Steiner Tree start
+    ## this totally based on mst, and the result is just a little better than mst.
+    ## 与真正的steiner树可能相差很多，这里只是从最小生成树稍微逼近一点而已
+    border2vertex: (tree, points) ->
+      vertex = []
+      for border in tree #or @ptree, @tree
+        index_a = border[0].index
+        index_b = border[1].index
+        vertex[index_a] = vertex[index_a] ||
+          couple: []
+          point: points[index_a]
+        vertex[index_b] = vertex[index_b] ||
+          couple: []
+          point: points[index_b]
+        vertex[index_a].couple.push
+          point: points[index_b]
+          distance: border.distance
+        vertex[index_b].couple.push
+          point: points[index_a]
+          distance: border.distance
+      vertex
+
+    vertex2border: (vertexs) ->
+      border = []
+      for vertex in vertexs
+        vertex.couple.forEach (c) ->
+          if border.length > 0
+            index = border.findIndex (b) ->
+              b.distance == c.distance && (c.point.index == b[0].index && vertex.point.index == b[1].index) || (c.point.index == b[1].index && vertex.point.index == b[0].index)
+            if index == -1
+              border.push
+                0: vertex.point
+                1: c.point
+                distance: c.distance
+          else
+            border.push
+              0: vertex.point
+              1: c.point
+              distance: c.distance
+      border
+
+    vertex2point: (vertexs) ->
+      points = []
+      for vertex in vertexs
+        points.push vertex.point
+      points
 
     steiner: ->
       if !@steinering || @points.length <= 1 then return
