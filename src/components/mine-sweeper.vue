@@ -9,7 +9,7 @@
           </th>
           <th :colspan="interval"></th>
           <th colspan="2">
-            <img @click="init" :src="'/static/img/' + img">
+            <img @click="init" :src="'./static/img/' + img">
           </th>
           <th :colspan="interval"></th>
           <th :colspan="colspan">
@@ -19,10 +19,7 @@
         <tbody>
           <tr v-for="j in row">
             <template v-for=" i in col">
-              <td v-text="cellStatus(i, j)"
-                  :class="cellClass(i, j)"
-                  @contextmenu.prevent
-                  @mousedown.prevent="mouse($event, i, j)">
+              <td v-text="cellStatus(i, j)" :class="cellClass(i, j)" @contextmenu.prevent @mousedown.prevent="mouse($event, i, j)">
               </td>
             </template>
           </tr>
@@ -285,7 +282,8 @@ export default m =
         @flaged += 1
       else
         cell.flaged = flags[index+1]
-        @flaged -= 1
+        if index == 0
+          @flaged -= 1
 
     expose: (cell) ->
       if cell.exposed == true then return
@@ -312,6 +310,7 @@ export default m =
 /*
 css copied from: https://birrell.org/andrew/minesweeper/
 */
+
 h2 {
   color: white;
 }
@@ -342,7 +341,8 @@ h2 {
   -webkit-user-select: none;
 }
 
-td, th {
+td,
+th {
   margin: 0px;
   border: 2px solid;
   border-color: #eeeeee #999999 #999999 #eeeeee;
@@ -353,9 +353,11 @@ td, th {
 }
 
 td {
-  box-sizing: border-box; /* avoids jumpiness when zoomed */
+  box-sizing: border-box;
+  /* avoids jumpiness when zoomed */
   width: 1.5rem;
-  max-width: 1.5rem; /* avoids being resized if text is too long (iOS) */
+  max-width: 1.5rem;
+  /* avoids being resized if text is too long (iOS) */
   min-width: 1.5rem;
   height: 1.5rem;
   min-height: 1.5rem;
@@ -384,7 +386,8 @@ img {
   cursor: default;
 }
 
-.exploded, .incorrect {
+.exploded,
+.incorrect {
   color: #ff0000;
 }
 
