@@ -1,18 +1,25 @@
 <template>
   <div id="chatnoir">
     <h2 v-text="status"></h2>
-    <!--
-            <div class="action">
-              <button @click="init">Play</button>
-              <button @click="toggle_path" v-text="pathText">Show Path</button>
-              <button @click="toggle_coord" v-text="coordText">Show Coord</button>
-              <button @click="toggle_insight" v-text="insightText">Show Insight</button>
-            </div>
-            -->
+    <!-- control -->
+    <!--<div class="action">
+                  <button @click="init">Play</button>
+                  <button @click="toggle_path" v-text="pathText">Show Path</button>
+                  <button @click="toggle_coord" v-text="coordText">Show Coord</button>
+                  <button @click="toggle_insight" v-text="insightText">Show Insight</button>
+                </div>-->
+    <!-- board -->
     <div class="board">
-      <svg :width="width" :height="height" @contextmenu.prevent>
+      <svg :width="width"
+           :height="height"
+           @contextmenu.prevent>
         <g :transform="transform">
-          <aha-hexagon v-for="(cell, key) in pixels" :key="key" :cell="cell" :showCoord="showCoord" :radius="radius" :interval="interval">
+          <aha-hexagon v-for="(cell, key) in pixels"
+                       :key="key"
+                       :cell="cell"
+                       :showCoord="showCoord"
+                       :radius="radius"
+                       :interval="interval">
           </aha-hexagon>
         </g>
       </svg>
@@ -53,6 +60,7 @@ export default m =
 
     #dev only
     bfs: {}
+    dev: false
 
   computed:
     width: ->
@@ -117,6 +125,10 @@ export default m =
   created: ->
     @init()
 
+  activated: ->
+    # console.log 'activated'
+    document.title = 'Chat Noir'
+
   methods:
     init: ->
       @cat = @point 5, 5
@@ -142,14 +154,18 @@ export default m =
       @cells = cells
 
     create_block: ->
+      if @dev then return
       blocked = {}
-      for i in [0...@block_num]
+      i = 0
+      cat_key = @hex2key @cat
+      while i < @block_num
         x = Math.trunc Math.random()*@col
         y = Math.trunc Math.random()*@row
         key = @hex_key x, y
-        if key != @hex2key @cat
+        if key != cat_key && !@cells[key].selected
           blocked[key] = @point x, y
           @cells[key].selected = true
+          i++
       @selected = blocked
 
     toggle_path: ->
@@ -199,8 +215,15 @@ export default m =
       cell = @point x, y
       @selected[key] = cell
       @cells[key].selected = true
-      @step += 1
-      @lazy_next cell
+      if !@dev
+        @step += 1
+        @lazy_next cell
+      else
+        num = Object.keys(@selected).length
+        random = Math.random()
+        if random < Math.pow 2, num - @block_num
+          @step += 1
+          @lazy_next cell
 
     unpick: (x, y) ->
       if @finish
@@ -212,7 +235,7 @@ export default m =
       @cells[key].selected = false
       @revert += 1
       @update_path()
-      @is_finish()
+      # @is_finish()
       # @next()
 
 
@@ -264,9 +287,10 @@ export default m =
 
     get_path: (bfs) ->
       path = []
-      goals = @get_goals(bfs.cost_so_far)
+      goals = @get_goals bfs.cost_so_far
       #选取goals中的一个作为路径的终点，这儿选的是第一个
-      goal = goals[0]
+      random = Math.round Math.random() * (goals.length - 1)
+      goal = goals[random]
       #从终点到起点cat的路径
       p = goal
       while p && @hex2key(p) != @hex2key(@cat)
@@ -299,7 +323,6 @@ export default m =
           @update_path()
           @is_finish()
       @next()
-
 
     is_finish: ->
       #必须先判断输，再判断赢
@@ -368,7 +391,6 @@ div.board {
   -o-user-select: none;
   -webkit-user-select: none;
 }
-
 
 
 

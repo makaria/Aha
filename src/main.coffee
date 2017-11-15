@@ -9,6 +9,7 @@ Vue.config.productionTip = false
 Vue::$prefix = 'aha-'
 [
   'navi'
+  'footer'
   'hexagon'
 ].forEach (name) -> Vue.component Vue::$prefix + name, require './components/' + name
 

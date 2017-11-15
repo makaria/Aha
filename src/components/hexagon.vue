@@ -1,13 +1,24 @@
 <template>
-  <g @mouseenter="enter" @mouseout="out" class="title" :transform="transformG" @contextmenu.prevent @mousedown.prevent="mousedown">
-    <ellipse :rx="radius" :ry="radius*0.9" :class="status">
+  <g @mouseenter="enter"
+     @mouseout="out"
+     class="title"
+     :transform="transformG"
+     @contextmenu.prevent
+     @mousedown.prevent="mousedown">
+    <ellipse :rx="radius"
+             :ry="radius*0.9"
+             :class="status">
     </ellipse>
-    <text v-show="showCoord" y="0.4em">
-      <tspan class="q" v-text="x"></tspan>
+    <text v-show="showCoord"
+          y="0.4em">
+      <tspan class="q"
+             v-text="x"></tspan>
       <tspan>,</tspan>
-      <tspan class="r" v-text="y"></tspan>
+      <tspan class="r"
+             v-text="y"></tspan>
     </text>
-    <text v-show="caught" y="0.4em">
+    <text v-show="caught"
+          y="0.4em">
       <tspan>Cat</tspan>
     </text>
   </g>

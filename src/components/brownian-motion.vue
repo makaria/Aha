@@ -1,6 +1,7 @@
 <template>
   <div class="body">
-    <canvas :width="width" :height="height"></canvas>
+    <canvas :width="width"
+            :height="height"></canvas>
   </div>
 </template>
 
@@ -16,6 +17,10 @@ export default m =
 
   mounted: ->
     window.onresize = @resize
+
+  activated: ->
+    # console.log 'activated'
+    document.title = 'Brownian Motion'
 
   methods:
     init: ->

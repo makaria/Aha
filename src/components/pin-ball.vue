@@ -8,6 +8,10 @@
 export default m =
   name: 'pinball'
 
+  activated: ->
+    # console.log 'activated'
+    document.title = 'Pinball'
+
 </script>
 
 <style scoped>

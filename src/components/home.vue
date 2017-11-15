@@ -1,41 +1,34 @@
 <template>
   <div class="home">
-    <h1 v-text="msg"></h1>
-    <h2>Game Links</h2>
-    <ul>
-      <li>
-        <router-link to="/Mine-Sweeper">Mine Sweeper</router-link>
-      </li>
-      <li>
-        <router-link to="/Minimum-Spanning-Tree">Minmum Spanning Tree</router-link>
-      </li>
-      <li>
-        <router-link to="/Pinball">Pinball</router-link>
-      </li>
-      <li>
-        <router-link to="/Brownian-Motion">Brownian Motion</router-link>
-      </li>
-    </ul>
-    <h2>Source Code</h2>
-    <ul>
-      <li><a href="https://github.com/makaria/aha" target="_blank">Github</a></li>
-    </ul>
+    <aha-footer></aha-footer>
   </div>
 </template>
 
 <!-- todo: 赢得游戏的时候播放“aha”的音效 -->
 <script lang="coffee">
-export default m =
-  name: 'hello'
-  data: ->
-    msg: 'Enjoy Games'
+  export default m =
+    name: 'home'
+    data: ->
+      msg: 'Enjoy Games'
+
+    activated: ->
+      # console.log 'activated'
+      document.title = 'Aha!'
+      document.body.style.background = 'no-repeat center center fixed'
+      document.body.style.backgroundImage = 'url(/static/img/asuka.jpg)'
+      document.body.style.backgroundSize = 'cover'
+
+    deactivated: ->
+      document.body.style.background = ''
+
 
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 
