@@ -1,7 +1,7 @@
 <template>
   <div class="navi">
     <ul>
-      <li v-for="(link, index) in links">
+      <li v-for="(link, index) in links" :key="index">
         <router-link :to="link.link"
                      :key="index"
                      v-text="link.name"
@@ -20,9 +20,9 @@ export default m =
       link: '/'
       name: 'Home'
     ,
-      link: '/Brownian-Motion'
-      name: 'Brownian Motion'
-    ,
+    #   link: '/Brownian-Motion'
+    #   name: 'Brownian Motion'
+    # ,
       link: '/Chat-Noir'
       name: 'Chat Noir'
     ,
@@ -31,9 +31,9 @@ export default m =
     ,
       link: '/Minimum-Spanning-Tree'
       name: 'Minimum Spanning Tree'
-    ,
-      link: '/Pinball'
-      name: 'Pinball'
+    # ,
+    #   link: '/Pinball'
+    #   name: 'Pinball'
     ]
 </script>
 

@@ -2,27 +2,33 @@
   <div>
     <h2>Minimum Spanning Tree</h2>
     <div class="action">
-      <button @click="toggleSpanning"
-              v-text="spanningText"
-              :class="spanClass"></button>
-      <button @click="toggleSteiner"
-              v-text="steinerText"
-              :class="spanClass"></button>
-      <button @click="steiner"
-              v-text="'Steiner X' + steinered"
-              :class="steinerClass"></button>
       <button @click="toggleUpdating"
               v-text="updateText"
-              :class="buttonClass"></button>
+              :class="buttonClass">
+      </button>
+      <button @click="toggleSpanning"
+              v-text="spanningText"
+              :class="spanClass">
+      </button>
+      <button @click="toggleSteiner"
+              v-text="steinerText"
+              :class="spanClass">
+      </button>
+      <button @click="steiner"
+              v-text="'Steiner X' + steinered"
+              :class="steinerClass">
+      </button>
       <button @click="clear"
-              :class="buttonClass">Clear</button>
+              :class="buttonClass">
+              Clear
+      </button>
     </div>
     <div class="board">
       <svg id="board"
            ref="board"
            :width="width"
            :height="height"
-           @contextmenu.prevent
+           @contextmenu.prevent="stop"
            @mousemove="drag"
            @click="drop"
            @dblclick="toggleUpdating">
@@ -59,7 +65,8 @@
            class="trees">
           <g v-if="tree.length > 0"
              class="line">
-            <line v-for="p in tree"
+            <line v-for="(p, index) in tree"
+                  :key="index"
                   class="tree"
                   :x1="p[0].x"
                   :y1="p[0].y"
@@ -68,7 +75,8 @@
           </g>
           <g v-if="ptree.length > 0 && spanning"
              class="line">
-            <line v-for="p in ptree"
+            <line v-for="(p, index) in ptree"
+                  :key="index"
                   class="ptree"
                   :x1="p[0].x"
                   :y1="p[0].y"
@@ -77,7 +85,8 @@
           </g>
           <g v-if="ktree.length > 0 && spanning"
              class="line">
-            <line v-for="p in ktree"
+            <line v-for="(p, index) in ktree"
+                  :key="index"
                   class="ktree"
                   :x1="p[0].x"
                   :y1="p[0].y"
@@ -86,7 +95,8 @@
           </g>
           <g v-if="ftree.length > 0 && steinering"
              class="line">
-            <line v-for="p in ftree"
+            <line v-for="(p, index) in ftree"
+                  :key="index"
                   class="ftree"
                   :x1="p[0].x"
                   :y1="p[0].y"
@@ -99,6 +109,7 @@
         <g v-if="fpoints.length > 0 && steinering"
            class="points">
           <g v-for="(point, index) in fpoints"
+             :key="index"
              v-if="point && point.index >= points.length"
              :index="index"
              class="points">
@@ -117,6 +128,7 @@
         <g v-if="random_points.length > 0"
            class="points">
           <g v-for="(point, index) in random_points"
+             :key="index"
              :index="index"
              class="points">
             <circle class="point"
@@ -133,6 +145,7 @@
         <g v-if="points.length > 0"
            class="points">
           <g v-for="(point, index) in points"
+             :key="index"
              v-if="point"
              :index="index"
              :class="pointClass"
@@ -188,7 +201,7 @@
       radius: 20
       scale: 0.7
       points: []
-      updating: false
+      updating: true
       spanning: true
       moving: false
       current: null
@@ -288,6 +301,9 @@
         result = @test_fermat()
         console.log result
         # @test_random()
+
+      stop: ->
+        if @updating then @toggleUpdating()
 
       toggleUpdating: ->
         if @moving then return

@@ -23,9 +23,10 @@
           </th>
         </thead>
         <tbody>
-          <tr v-for="j in row">
+          <tr v-for="j in row" :key="j">
             <template v-for=" i in col">
               <td v-text="cellStatus(i, j)"
+                  :key="i"
                   :class="cellClass(i, j)"
                   @contextmenu.prevent
                   @mousedown.prevent="mouse($event, i, j)">
