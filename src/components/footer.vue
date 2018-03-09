@@ -3,14 +3,16 @@
     <li>
       Source Code:
       <a href="https://github.com/makaria/aha"
-         target="_blank">Github</a>
+         target="_blank">
+         Github
+      </a>
     </li>
   </div>
 </template>
 
 <script lang="coffee">
 export default m =
-  name: 'footer'
+  name: 'aha-footer'
 
 </script>
 

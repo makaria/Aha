@@ -6,7 +6,8 @@
                      :key="index"
                      v-text="link.name"
                      active-class="highlighted"
-                     exact></router-link>
+                     exact>
+        </router-link>
       </li>
     </ul>
   </div>
@@ -14,7 +15,7 @@
 
 <script lang="coffee">
 export default m =
-  name: 'navi'
+  name: 'aha-navi'
   data: ->
     links: [
       link: '/'

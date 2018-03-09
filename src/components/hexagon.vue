@@ -12,10 +12,12 @@
     <text v-show="showCoord"
           y="0.4em">
       <tspan class="q"
-             v-text="x"></tspan>
+             v-text="x">
+      </tspan>
       <tspan>,</tspan>
       <tspan class="r"
-             v-text="y"></tspan>
+             v-text="y">
+      </tspan>
     </text>
     <text v-show="caught"
           y="0.4em">
@@ -26,7 +28,7 @@
 
 <script lang="coffee">
   export default m =
-    name: 'hexagon'
+    name: 'aha-hexagon'
     props:
       radius: Number
       cell: Object

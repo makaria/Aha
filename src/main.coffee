@@ -7,15 +7,11 @@ import router from './router'
 Vue.config.productionTip = false
 
 Vue::$prefix = 'aha-'
-import Footer from './components/footer.vue'
-import Navi from './components/navi.vue'
-import Hexagon from './components/hexagon.vue'
-
 [
-  ['footer', Footer],
-  ['navi', Navi],
-  ['hexagon', Hexagon],
-].forEach (d) ->  Vue.component(Vue.prototype.$prefix + d[0], d[1])
+  'navi'
+  'footer'
+  'hexagon'
+].forEach (name) -> Vue.component Vue::$prefix + name, require './components/' + name
 
 # eslint-disable no-new
 new Vue
